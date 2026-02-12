@@ -1,18 +1,10 @@
+import allure
 import pytest
-
-from selenium import webdriver
 from pages.main_page import MainPage
-import tests.paths as paths
 
 class TestMainPage:
-    driver = None
-
-    @classmethod
-    def setup_class(cls):
-        cls.driver = webdriver.Firefox()
-        cls.driver.get(paths.BASE_URL)
-        cls.main_page = MainPage(cls.driver)
-
+    @allure.title('Проверка списка вопросов о важном')
+    @allure.description('На странице ищем элемент (вопрос) и проверяем, что ему соответствует ответ')
     @pytest.mark.parametrize(
     'heading,text',
     [
@@ -26,11 +18,8 @@ class TestMainPage:
         ['Я жизу за МКАДом, привезёте?', 'Да, обязательно. Всем самокатов! И Москве, и Московской области.']
     ]
     )
-    def test_accordion_heading_positive_result(self, heading, text):
-        self.main_page.scroll_accordion_heading()
-        self.main_page.click_accordion_heading(heading)
-        self.main_page.check_accordion_panel(text)
-
-    @classmethod
-    def teardown_class(cls):
-        cls.driver.quit()
+    def test_accordion_heading_positive_result(self, driver, heading, text):
+        main_page = MainPage(driver)
+        main_page.scroll_accordion_heading()
+        main_page.click_accordion_heading(heading)
+        main_page.check_accordion_panel(text)
